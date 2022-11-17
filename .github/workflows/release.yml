@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        required: true
+        type: string
+
+      release-branch:
+        type: string
+        default: 'main'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: "${{ inputs.release-branch }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          cache: maven
+
+      - name: Configure Nexus credentials
+        uses: s4u/maven-settings-action@v2.6.0
+        with:
+          servers: |
+            [
+              {"id": "mhikes-snapshots", "username": "github-actions", "password": "${{ secrets.MHIKES_NEXUS }}"},
+              {"id": "mhikes-releases", "username": "github-actions", "password": "${{ secrets.MHIKES_NEXUS }}"},
+              {"id": "old-mhikes-releases", "username": "github-actions", "password": "${{ secrets.MHIKES_NEXUS }}"}
+            ]
+
+      - name: Configure Git user
+        env:
+          GITHUB_CI_USER: MhikesCI
+          GITHUB_CI_EMAIL: ops@mhikes.com
+        run: |
+          git config --global user.name "$GITHUB_CI_USER"
+          git config --global user.email "$GITHUB_CI_EMAIL"
+
+      - name: Build, test, and push to Nexus
+        id: build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mvn -B release:clean
+          mvn -B release:prepare
+          mvn -B release:perform
