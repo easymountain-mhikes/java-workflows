@@ -33,3 +33,9 @@ jobs:
       - name: Build and test
         run: >
           mvn -B verify
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: built-jars
+          path: "**/target/*.jar"
+          retention-days: 1
