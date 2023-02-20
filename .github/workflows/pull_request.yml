@@ -32,7 +32,7 @@ jobs:
 
       - name: Build and test
         run: >
-          mvn -B verify
+          mvn -B -U verify
 
       - uses: actions/upload-artifact@v3
         with:
