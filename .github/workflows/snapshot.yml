@@ -35,4 +35,4 @@ jobs:
 
       - name: Build, test, and push to Nexus
         run: |
-          mvn -B -U deploy
+          mvn -B -U clean deploy
