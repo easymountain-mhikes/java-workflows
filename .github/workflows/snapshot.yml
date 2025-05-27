@@ -23,9 +23,6 @@ jobs:
           # Default:
           # cache-dependency-path: '**/pom.xml'
 
-      - name: Configure package repository credentials
-        uses: s4u/maven-settings-action@v3.1.0
-
       - name: Publish package to GitHub Packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

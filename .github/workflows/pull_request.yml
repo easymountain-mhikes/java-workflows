@@ -21,9 +21,6 @@ jobs:
           java-version: ${{ inputs.java-version }}
           cache: maven
 
-      - name: Configure package repository credentials
-        uses: s4u/maven-settings-action@v3.1.0
-
       - name: Build and test
         run: >
           ./mvnw --batch-mode --update-snapshots verify
