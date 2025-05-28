@@ -29,7 +29,6 @@ jobs:
           MAVEN_USER: ${{ vars.MAVEN_USER }}
           MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
         run: |
-          cat ~/.m2/settings.xml
           ./mvnw --batch-mode --update-snapshots verify
 
       - uses: actions/upload-artifact@v4
