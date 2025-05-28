@@ -17,14 +17,19 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
+          server-id: github
+          server-username: MAVEN_USER
+          server-password: MAVEN_TOKEN
           distribution: temurin
           java-version: ${{ inputs.java-version }}
           cache: maven
 
       - name: Build and test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: >
+        env: 
+          MAVEN_USER: ${{ vars.MAVEN_USER }}
+          MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+        run: |
+          cat ~/.m2/settings.xml
           ./mvnw --batch-mode --update-snapshots verify
 
       - uses: actions/upload-artifact@v4

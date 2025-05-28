@@ -23,6 +23,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
+          server-id: github
+          server-username: MAVEN_USER
+          server-password: MAVEN_TOKEN
           distribution: temurin
           java-version: ${{ inputs.java-version }}
           cache: maven
@@ -31,6 +34,7 @@ jobs:
         env:
           GITHUB_CI_USER: MhikesCI
           GITHUB_CI_EMAIL: ops@mhikes.com
+
         run: |
           git config --global user.name "$GITHUB_CI_USER"
           git config --global user.email "$GITHUB_CI_EMAIL"
@@ -38,6 +42,7 @@ jobs:
       - name: Publish package to GitHub Packages
         id: build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USER: ${{ vars.MAVEN_USER }}
+          MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
         run: |
           ./mvnw --batch-mode release:prepare release:perform

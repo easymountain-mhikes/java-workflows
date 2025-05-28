@@ -17,6 +17,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
+          server-id: github
+          server-username: MAVEN_USER
+          server-password: MAVEN_TOKEN
           distribution: temurin
           java-version: ${{ inputs.java-version }}
           cache: maven
@@ -25,6 +28,7 @@ jobs:
 
       - name: Publish package to GitHub Packages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USER: ${{ vars.MAVEN_USER }}
+          MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
         run: |
           ./mvnw --batch-mode --update-snapshots deploy
