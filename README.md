@@ -99,7 +99,7 @@ In order to publish your project to GitHub packages, you need to add the followi
     </distributionManagement>
 ```
 
-## Releasing a new version of the workflows
+## Create a new version of the workflows
 
 Workflows should be referenced with their version, e.g. `@v2` or `@2.0`, to ensure that the workflow is not broken by changes in the main branch.
 
@@ -125,7 +125,18 @@ git push -f origin v2
 git push origin v2.0
 ```
 
-## Manual release
+
+## Automated Java release
+
+1. Create a branch for your new feature. Please, follow the convention `features/JIRA-KEY-feature-description`
+2. Once the featurue is ready, create a Github Merge Request to the main branch. Add a reviewer. The Github Action [Pull Request workflow](#pull-request-workflow) should be triggered.
+3. The reviewer should review the MR and once ready, the branch should be merged. If many commits have been made to the branch, please merge-squash if necessary to avoid noise.
+4. Once merged, the Github Action [Snapshot workflow](#snapshots-workflow) should be triggered. It will create a intermediate version, post-fixed by -SNAPSHOT
+5. If the project is ready to be released, the Github Action [Release workflow](#release-workflow) should be triggered manually in the section "Action" of the project.
+6. Yet, the projects are not deployed automatically (to be done)
+
+
+## Manual Java release
 
 ```bash
 ./mvnw --batch-mode release:clean release:prepare release:perform
