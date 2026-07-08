@@ -11,9 +11,16 @@ on:
         type: string
         default: 'main'
 
+    outputs:
+      release-version:
+        description: 'Maven project version that was released (without the -SNAPSHOT suffix)'
+        value: ${{ jobs.release.outputs.release-version }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      release-version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,6 +36,15 @@ jobs:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
           cache: maven
+
+      - name: Capture release version
+        id: version
+        env:
+          MAVEN_USER: ${{ vars.MAVEN_USER }}
+          MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+        run: |
+          CURRENT_VERSION=$(./mvnw --batch-mode --quiet help:evaluate -Dexpression=project.version -DforceStdout)
+          echo "version=${CURRENT_VERSION%-SNAPSHOT}" >> "$GITHUB_OUTPUT"
 
       - name: Configure Git user
         env:

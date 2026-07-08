@@ -18,6 +18,24 @@ jobs:
     secrets: inherit
 ```
 
+This workflow exposes the resolved release version (the Maven `project.version` with the `-SNAPSHOT` suffix stripped, computed before `release:prepare` runs) as an output, so callers can use it without having to parse the pom themselves — for example to tag a Docker image built after the release:
+
+```yaml
+jobs:
+  release:
+    uses: easymountain-mhikes/java-workflows/.github/workflows/release.yml@v2
+    with:
+      java-version: 21
+      release-branch: main
+    secrets: inherit
+
+  after-release:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Released version ${{ needs.release.outputs.release-version }}"
+```
+
 ## Snapshots workflow:
 This action provides an automated way to build and publish Java snapshots of the project using Maven, to github packages.
 
@@ -102,13 +120,6 @@ In order to publish your project to GitHub packages, you need to add the followi
 ## Create a new version of the workflows
 
 Workflows should be referenced with their version, e.g. `@v2` or `@2.0`, to ensure that the workflow is not broken by changes in the main branch.
-
-Unfortunately, these were referenced early in the projects as 
-```yaml
-  uses: easymountain-mhikes/java-workflows/.github/workflows/pull_request.yml@main
-```
-This should be changed to `@v2` or `@2.0` in the future, but for now, we needed to release a new version of the workflow to ensure that the workflow is not broken by changes in the main branch.
-These changed are on the branch `github-repository`, which is the branch that is used to release new versions of the workflow. This branch should be merge to the main branch whenever it's possible.
 
 Once the main branch is stable, we can release a new version of the workflow by creating a new tag.
 
