@@ -62,3 +62,10 @@ jobs:
           MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
         run: |
           ./mvnw --batch-mode release:prepare release:perform
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: built-jars
+          # release:perform builds the tagged release in a nested checkout (target/checkout by default)
+          path: "target/checkout/**/target/*.jar"
+          retention-days: 1

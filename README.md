@@ -6,6 +6,7 @@ Packages are deployed on Github Packages.
 
 ## Release workflow: 
 This action provides an automated way to build and publish Java releases of the project using Maven, to github packages.
+The build jars are uploaded as artifacts (`built-jars`), so callers don't need to rebuild the released tag to package it further (e.g. into a Docker image).
 
 Usage: 
 ```yaml
@@ -38,6 +39,7 @@ jobs:
 
 ## Snapshots workflow:
 This action provides an automated way to build and publish Java snapshots of the project using Maven, to github packages.
+The build jars are uploaded as artifacts (`built-jars`), so callers don't need to rebuild the project to package them further (e.g. into a Docker image).
 
 Usage: 
 ```yaml

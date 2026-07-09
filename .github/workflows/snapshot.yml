@@ -32,3 +32,9 @@ jobs:
           MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
         run: |
           ./mvnw --batch-mode --update-snapshots deploy
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: built-jars
+          path: "**/target/*.jar"
+          retention-days: 1
